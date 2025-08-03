@@ -1,0 +1,36 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # krok 1: pobierz kod
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # krok 2: zainstaluj Python
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      # krok 3: instalacja zależności
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      # krok 4: uruchom testy
+      - name: Run tests
+        run: pytest
+
+      # krok 5: build obrazu Dockera
+      - name: Build Docker image
+        run: docker build -t ci-cd-demo .
+
